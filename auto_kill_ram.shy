@@ -1,0 +1,33 @@
+
+#!/data/data/com.termux/files/usr/bin/bash
+# سكريبت تنظيف RAM تلقائي وإغلاق التطبيقات الثقيلة بدون root
+
+INTERVAL=300       # المدة بين كل تنظيف بالثواني
+THRESHOLD=10       # نسبة RAM الحدية للتطبيقات الثقيلة
+
+echo "🔹 تنظيف RAM تلقائي كل $INTERVAL ثانية"
+
+while true; do
+    echo "⏳ تنظيف RAM جاري..."
+    sync
+
+    if [ "$(id -u)" -eq 0 ]; then
+        echo 3 > /proc/sys/vm/drop_caches
+        echo "✅ RAM تم تنظيفها بالكامل."
+    else
+        echo "⚠️ صلاحيات root غير متاحة. تنظيف الكاش محدود."
+    fi
+
+    # كشف العمليات الثقيلة
+    echo "🔍 التطبيقات الثقيلة:"
+    ps -eo pid,pmem,comm --sort=-pmem | awk -v threshold=$THRESHOLD '$2>threshold {print $0}' | while read pid mem cmd; do
+        echo "⚠️ سيتم إغلاق العملية: $cmd (PID: $pid) تستخدم $mem% من RAM"
+        # محاولة إغلاق العملية
+        kill -9 $pid 2>/dev/null
+    done
+
+    free -h
+    echo -e "\a"
+    echo "⏱️ الانتظار $INTERVAL ثانية قبل التنظيف التالي..."
+    sleep $INTERVAL
+done

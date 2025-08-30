@@ -1,0 +1,8 @@
+---- Sat Aug 30 17:14:43 +01 2025 : تشغيل Fake Swap ----
+✅ Fake Swap File تخلق: /data/data/com.termux/files/home/pi_hackathon25/fake_swapfile
+---- Sat Aug 30 17:14:48 +01 2025 : Fake Swap Check ----
+📊 حالة الذاكرة:
+               total        used        free      shared  buff/cache   available
+Mem:           5.4Gi       3.3Gi       121Mi        47Mi       2.0Gi       1.8Gi
+Swap:          4.0Gi       2.1Gi       1.9Gi
+---- نهاية الدورة ----

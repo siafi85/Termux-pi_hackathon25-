@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# تحديث Termux وتثبيت الأدوات الأساسية
+echo "[1/6] Updating Termux and installing tools..."
+pkg update -y
+pkg upgrade -y
+pkg install wget unzip tar curl -y
+
+# الانتقال لمجلد المشروع
+PROJECT_DIR="$HOME/pi_hackathon25"
+echo "[2/6] Moving to project directory: $PROJECT_DIR"
+mkdir -p "$PROJECT_DIR"
+cd "$PROJECT_DIR" || { echo "Project directory not found!"; exit 1; }
+
+# حذف أي نسخة قديمة من ngrok
+echo "[3/6] Removing old ngrok files..."
+rm -f ngrok ngrok-stable-linux-arm*.zip ngrok-stable-linux-arm64*.tgz
+
+# تحديد المعمارية وتحميل النسخة الصحيحة
+ARCH=$(uname -m)
+echo "[4/6] Detected architecture: $ARCH"
+
+if [ "$ARCH" = "aarch64" ]; then
+    echo "Downloading ngrok 64-bit..."
+    wget -q https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.tgz
+    tar -xvzf ngrok-stable-linux-arm64.tgz
+elif [ "$ARCH" = "armv7l" ]; then
+    echo "Downloading ngrok 32-bit..."
+    wget -q https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip
+    unzip -o ngrok-stable-linux-arm.zip
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
+
+# إعطاء صلاحية التنفيذ
+chmod +x ngrok
+
+# السؤال على التوكن وتسجيله
+read -p "Enter your ngrok authtoken: " NGROK_TOKEN
+./ngrok authtoken $NGROK_TOKEN
+
+# تشغيل ngrok على البورت 3000
+echo "[6/6] Starting ngrok on port 3000..."
+./ngrok http 3000

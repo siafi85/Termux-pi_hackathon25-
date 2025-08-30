@@ -1,0 +1,16 @@
+Hello Pi Core Team,
+
+The Pi hackathon25 project is ready for Phase 9.
+
+Quick Tunnel link to access the project directly:
+https://stat-beverly-cosmetic-sort.trycloudflare.com
+
+Summary of setup:
+1. Project fully ready and organized.
+2. Termux environment with Node.js and npm.
+3. Quick Tunnel configured with automatic launch script.
+4. Git repository for version control.
+5. Ready for demonstration and testing.
+
+Best regards,
+Samir Siafi

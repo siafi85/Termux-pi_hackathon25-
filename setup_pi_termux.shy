@@ -1,0 +1,59 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# 1️⃣ إنشاء مجلد المشروع
+mkdir -p ~/pi_hackathon25
+cd ~/pi_hackathon25
+
+# 2️⃣ إنشاء package.json تلقائي
+cat > package.json <<EOL
+{
+  "name": "pi_hackathon25",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "echo \\"Error: no test specified\\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {}
+}
+EOL
+
+# 3️⃣ إنشاء server.js بسيط
+cat > server.js <<EOL
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+require('dotenv').config();
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+app.get('/', (req, res) => {
+  res.send('Hello from Pi Hackathon!');
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(\`Server running on http://localhost:\${PORT}\`);
+});
+EOL
+
+# 4️⃣ تثبيت الحزم
+npm install
+
+# 5️⃣ تحميل Cloudflared ARM64
+wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64
+chmod +x cloudflared
+
+echo "✅ كلشي جاهز!"
+echo "تشغيل السيرفر: cd ~/pi_hackathon25 && npm run dev"
+echo "فتح نفق خارجي: ./cloudflared tunnel --url http://localhost:3000"
